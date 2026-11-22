@@ -10,15 +10,6 @@ def load_model():
     return joblib.load("crop_model.joblib")
 
 
-def confidence_level(percent):
-    # Thresholds are my own simple choice, you can change them
-    if percent >= 80:
-        return "High"
-    if percent >= 50:
-        return "Medium"
-    return "Low"
-
-
 model = load_model()
 
 st.title("🌾 Crop Recommendation")
@@ -39,26 +30,11 @@ if st.button("Predict crop"):
     input_data = pd.DataFrame(
         [[n, p, k, temperature, humidity, ph, rainfall]], columns=FEATURES
     )
-
-    # One probability per crop; the highest one is the prediction
-    probabilities = model.predict_proba(input_data)[0]
-    best_index = probabilities.argmax()
-    best_crop = model.classes_[best_index]
-    confidence = probabilities[best_index] * 100
-
+    best_crop = model.predict(input_data)[0]
     st.success(f"Recommended crop: **{best_crop}**")
 
-    # Confidence of the best prediction
-    st.metric("Confidence", f"{confidence:.1f}%", confidence_level(confidence))
-    st.progress(float(probabilities[best_index]))
-
-    if confidence < 50:
-        st.warning(
-            "Low confidence: the model is unsure. Check your input values "
-            "and compare with the other suggestions below."
-        )
-
-    # Top 3 choices with confidence
+    # Show the top 3 choices with confidence
+    probabilities = model.predict_proba(input_data)[0]
     top3 = sorted(zip(model.classes_, probabilities), key=lambda x: x[1], reverse=True)[:3]
     st.write("Top 3 suggestions:")
     for crop, prob in top3:
