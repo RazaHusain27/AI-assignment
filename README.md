@@ -7,6 +7,8 @@ temperature, humidity and rainfall, using a Random Forest model.
 ## Live demo
 https://ai-assignment-5aztxq7k2lp8ujus5efb9v.streamlit.app/
 
+ # Domain 3
+ AGRICULTURE
 
 ## Files
 - train.py: trains the model and saves crop_model.joblib
@@ -15,8 +17,11 @@ https://ai-assignment-5aztxq7k2lp8ujus5efb9v.streamlit.app/
 
 ## Run locally
 pip install -r requirements.txt
+
 python train.py
+
 python test_model.py
+
 python -m streamlit run app.py
 
 ## Dataset
